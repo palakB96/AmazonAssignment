@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="All Test Suite">
+    <test verbose="2" preserve-order="true" name="/home/palakb/IdeaProjects/mavenproject/src/test/java">
+        <parameter name="Browser" value="chrome"></parameter>
+    <classes>
+        <class name="Amazon"></class>
+    </classes>
+    </test>
+
+</suite>
