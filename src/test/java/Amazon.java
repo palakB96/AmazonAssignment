@@ -71,7 +71,7 @@ public class Amazon {
     @Test(priority = 4)
     public void addToCart() throws NoSuchElementException
     {
-            Select s = new Select(driver.findElement(By.id("quantity")));
+            Select s = new Select(driver.findElement(By.cssSelector("#selectQuantity #quantity")));
             s.selectByIndex(0);
             selectedQty = s.getFirstSelectedOption().getText();
             System.out.println(selectedQty);
@@ -131,40 +131,40 @@ public class Amazon {
     @Test(priority = 10)
     public void payment()
     {
-        driver.findElement(By.id("twotabsearchtextbox")).sendKeys("Payment Option");
-        driver.findElement(By.id("twotabsearchtextbox")).sendKeys(Keys.ENTER);
-        driver.findElement(By.cssSelector("img[alt*=\"Payment settings on Amazon\"]")).click();
+        driver.findElement(By.id(p.getProperty("SearchBar.ID"))).sendKeys("Payment Option");
+        driver.findElement(By.id(p.getProperty("SearchBar.ID"))).sendKeys(Keys.ENTER);
+        driver.findElement(By.cssSelector(p.getProperty("PaymentOptions.CSS"))).click();
 
     }
     @Test(priority = 11)
     public void addCardDetails() throws InterruptedException {
         Actions act =  new Actions(driver);
-        WebElement addCreditCardDetails = driver.findElement(By.xpath("//span[text()='Add a credit or debit card']"));
+        WebElement addCreditCardDetails = driver.findElement(By.xpath(p.getProperty("addCreditCardDetailsBtn")));
         String addCredit = addCreditCardDetails.getText();
         System.out.println(addCredit);
-        Assert.assertEquals(addCredit,"Add a credit or debit card");
+        Assert.assertEquals(addCredit,p.getProperty("TextOnAddCardDetailsBtn"));
     }
 
     @Test(priority = 12)
     public void navToAddressPage()
     {
-        driver.findElement(By.id("nav-link-accountList")).click();
+        driver.findElement(By.id(p.getProperty("NavToAccountListLink"))).click();
         driver.findElement(By.cssSelector("img[alt*=\"Your Addresses\"]")).click();
-        driver.findElement(By.id("ya-myab-plus-address-icon")).click();
+        driver.findElement(By.id(p.getProperty("PlusIconInAddressPage"))).click();
     }
 
     @Test(dependsOnMethods = {"navToAddressPage"})
     public void addressFormDetails()
     {
-        driver.findElement(By.id("address-ui-widgets-enterAddressFullName")).sendKeys("Palak");
-        driver.findElement(By.id("address-ui-widgets-enterAddressPhoneNumber")).sendKeys("1234567890");
-        WebElement pinCode = driver.findElement(By.id("address-ui-widgets-enterAddressPostalCode"));
+        driver.findElement(By.id(p.getProperty("FullName.ID"))).sendKeys("Palak");
+        driver.findElement(By.id(p.getProperty("MobileNumber.ID"))).sendKeys("1234567890");
+        WebElement pinCode = driver.findElement(By.id(p.getProperty("PinCode.ID")));
         pinCode.clear();
         pinCode.sendKeys("160019");
-        driver.findElement(By.id("address-ui-widgets-enterAddressLine1")).sendKeys("#3142,Sector 27 D");
-        driver.findElement(By.id("address-ui-widgets-enterAddressLine2")).sendKeys("Ludhiana");
-        driver.findElement(By.id("address-ui-widgets-use-as-my-default")).click();
-        WebElement addAddressBtn = driver.findElement(By.id("address-ui-widgets-form-submit-button-announce"));
+        driver.findElement(By.id(p.getProperty("Address1.ID"))).sendKeys("#3142,Sector 27 D");
+        driver.findElement(By.id(p.getProperty("Address2.ID"))).sendKeys("Ludhiana");
+        driver.findElement(By.id(p.getProperty("MakeDefaultAddressCheckbox"))).click();
+        WebElement addAddressBtn = driver.findElement(By.id(p.getProperty("AddAddressBtn.ID")));
         Actions actions = new Actions(driver);
         actions.moveToElement(addAddressBtn).click().build().perform();
 
@@ -172,10 +172,10 @@ public class Amazon {
     @Test(dependsOnMethods = {"addressFormDetails"})
     public void verifyAddress()
     {
-        String actualAddress = driver.findElement(By.id("ya-myab-display-address-block-0")).getText();
-        //String[] arr = getText.split("\\n");
+        String actualAddress = driver.findElement(By.id(p.getProperty("VerifyAddress.ID"))).getText();
+        System.out.println(actualAddress);
         String expectedAddress = "Default:  \n" +
-                "Palak\n" +
+                "palak\n" +
                 "#3142,Sector 27 D\n" +
                 "Ludhiana\n" +
                 "CHANDIGARH, CHANDIGARH 160019\n" +
@@ -185,4 +185,9 @@ public class Amazon {
         Assert.assertEquals(actualAddress,expectedAddress);
     }
 
+    @AfterClass
+    public void closeBrowser()
+    {
+        driver.quit();
+    }
 }
